@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coconut Export Business Management System | தென்னை ஏற்றுமதி மேலாண்மை</title>
+  <link rel="stylesheet" href="/styles.css">
+  <!-- Lucide Icons via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.441.0/dist/umd/lucide.min.js"></script>
+</head>
+<body>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <aside class="sidebar" id="sidebar">
+    <div class="brand-section">
+      <div class="brand-icon">🥥</div>
+      <div class="brand-text">
+        <h1>Coconut Export</h1>
+        <p>Management Platform • தென்னை ஏற்றுமதி</p>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-category">Core Business</div>
+      <a class="nav-item active" data-view="dashboard">
+        <i data-lucide="layout-dashboard"></i>
+        <span>Dashboard / மேலோட்டம்</span>
+      </a>
+      <a class="nav-item" data-view="invoices">
+        <i data-lucide="file-spreadsheet"></i>
+        <span>Tally Export Invoices / விற்பனை</span>
+        <span class="nav-badge" id="badgeInvoiceCount">11</span>
+      </a>
+      <a class="nav-item" data-view="dispatch">
+        <i data-lucide="truck"></i>
+        <span>Lorry Dispatch / வண்டித்தாள்</span>
+      </a>
+
+      <div class="nav-category">Procurement & Husk</div>
+      <a class="nav-item" data-view="farmers">
+        <i data-lucide="trees"></i>
+        <span>Farmers & Incoming / காய் வரத்து</span>
+      </a>
+      <a class="nav-item" data-view="husk">
+        <i data-lucide="layers"></i>
+        <span>Husk (Mattai) / மட்டை கொள்முதல்</span>
+      </a>
+
+      <div class="nav-category">Labor & Processing</div>
+      <a class="nav-item" data-view="dehusking">
+        <i data-lucide="users"></i>
+        <span>De-husking Labor / உரிக்கும் கூலி</span>
+      </a>
+      <a class="nav-item" data-view="grading">
+        <i data-lucide="package-check"></i>
+        <span>Group Grading & Bags / தரம் பிரித்தல்</span>
+      </a>
+      <a class="nav-item" data-view="carriers">
+        <i data-lucide="user-check"></i>
+        <span>Carriers & Drivers / தூக்கும் ஆட்கள்</span>
+      </a>
+
+      <div class="nav-category">Accounts & Operations</div>
+      <a class="nav-item" data-view="cashbook">
+        <i data-lucide="book-open"></i>
+        <span>Cash & Bank Book / வரவு - செலவு</span>
+      </a>
+      <a class="nav-item" data-view="managers">
+        <i data-lucide="fuel"></i>
+        <span>Manager Petrol & Fleet / வாகனம்</span>
+      </a>
+      <a class="nav-item" data-view="notebook">
+        <i data-lucide="bookmark"></i>
+        <span>Notebook Scans / 16 பக்க நோட்டு</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="system-status">
+        <span class="status-dot"></span>
+        <span>SQLite Native DB • Online</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN WRAPPER -->
+  <div class="main-wrapper">
+    <!-- Top Header -->
+    <header class="top-header">
+      <div class="header-title-area">
+        <h2 id="currentViewTitle">Business Overview & Dashboard</h2>
+        <p id="currentViewSub">Real-time financial indicators and operations tracking</p>
+      </div>
+      <div class="header-actions">
+        <div class="live-badge">
+          <i data-lucide="database" style="width:14px;height:14px;"></i>
+          <span>TallyPrime Ready</span>
+        </div>
+        <button class="btn btn-primary" id="btnQuickAdd">
+          <i data-lucide="plus-circle" style="width:16px;height:16px;"></i>
+          <span>+ Add Record</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Dynamic Content -->
+    <main class="content-area">
+
+      <!-- ============================================================ -->
+      <!-- 1. DASHBOARD VIEW -->
+      <!-- ============================================================ -->
+      <section id="view-dashboard" class="page-view active">
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Total Export Sales</span>
+              <div class="kpi-icon">💰</div>
+            </div>
+            <div class="kpi-value" id="kpiTotalSales">₹ 0</div>
+            <div class="kpi-sub">
+              <span>B2B Interstate Invoiced</span>
+            </div>
+          </div>
+
+          <div class="kpi-card gold">
+            <div class="kpi-header">
+              <span class="kpi-label">Outstanding DD / Balance</span>
+              <div class="kpi-icon">⏳</div>
+            </div>
+            <div class="kpi-value" id="kpiReceivable">₹ 0</div>
+            <div class="kpi-sub">
+              <span>Pending buyer settlements</span>
+            </div>
+          </div>
+
+          <div class="kpi-card blue">
+            <div class="kpi-header">
+              <span class="kpi-label">Net Cash & Bank Balance</span>
+              <div class="kpi-icon">🏦</div>
+            </div>
+            <div class="kpi-value" id="kpiCashInHand">₹ 0</div>
+            <div class="kpi-sub">
+              <span>Current operating balance</span>
+            </div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-header">
+              <span class="kpi-label">Harvested Coconuts</span>
+              <div class="kpi-icon">🥥</div>
+            </div>
+            <div class="kpi-value" id="kpiTotalNuts">0 nuts</div>
+            <div class="kpi-sub">
+              <span>Total plucking from groves</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-columns">
+          <!-- Left Column: Operations Overview & Export Sales Summary -->
+          <div class="dashboard-col">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i data-lucide="file-text"></i>
+                  <span>Recent Export Consignments (Parties Note)</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('invoices')">View All Invoices</button>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Bill No</th>
+                      <th>Date</th>
+                      <th>Buyer</th>
+                      <th>Lorry No</th>
+                      <th>Weight (kg)</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardInvoicesTbody">
+                    <tr><td colspan="7" style="text-align:center;">Loading records...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Labor & Processing Wage Summary -->
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i data-lucide="activity"></i>
+                  <span>De-husking & Labor Wage Settlement Overview</span>
+                </div>
+              </div>
+              <div style="padding: 20px;">
+                <div class="calc-box">
+                  <div class="calc-row">
+                    <span>Total Coconuts De-husked (KN / 4P / MO / PL):</span>
+                    <strong id="dashTotalDehusked">0 nuts</strong>
+                  </div>
+                  <div class="calc-row">
+                    <span>Gross Piece-Rate Wages Earned:</span>
+                    <strong id="dashTotalWageEarned">₹ 0</strong>
+                  </div>
+                  <div class="calc-row">
+                    <span>Cumulative Daily Utility Advances (படி) Paid:</span>
+                    <strong id="dashTotalUtilityAdv">₹ 0</strong>
+                  </div>
+                  <div class="calc-row total">
+                    <span>Pending Bulk Settlements (Upon Home Departure):</span>
+                    <strong id="dashPendingBulkPay">₹ 0</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Cash Flow & Quick Actions -->
+          <div class="dashboard-col">
+            <div class="panel">
+              <div class="panel-header">
+                <div class="panel-title">
+                  <i data-lucide="receipt"></i>
+                  <span>Recent Cash & Bank Entries</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="navigateTo('cashbook')">Open Ledger</button>
+              </div>
+              <div class="table-container">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Particulars</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dashboardCashTbody">
+                    <tr><td colspan="4" style="text-align:center;">Loading cash book...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Quick Access to Notebook Scans -->
+            <div class="panel" style="background: linear-gradient(135deg, #064e3b 0%, #04382c 100%); color:white;">
+              <div style="padding: 20px;">
+                <h3 style="font-size:16px; margin-bottom: 8px;">Physical Notebook Records</h3>
+                <p style="font-size:12.5px; opacity: 0.9; margin-bottom: 14px; line-height: 1.4;">
+                  All 16 scanned notebook pages (loading sheets, loadman coolie, husk purchases, daily cash book, parties note, grove lease, and employee peeling wages) have been digitized into this database.
+                </p>
+                <button class="btn btn-gold btn-sm" onclick="navigateTo('notebook')">
+                  <i data-lucide="book-open"></i>
+                  <span>Browse 16 Notebook Scans</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 2. EXPORT INVOICES (TALLY INTEGRATION) -->
+      <!-- ============================================================ -->
+      <section id="view-invoices" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="file-spreadsheet"></i>
+              <span>Export Invoices & TallyPrime Commercial Bills (Parties Note - பக்கம் 12)</span>
+            </div>
+            <div class="panel-actions">
+              <input type="text" class="search-input" id="searchInvoices" placeholder="Search bill, buyer, lorry...">
+              <button class="btn btn-secondary" onclick="exportCsv('invoices')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openInvoiceModal()">
+                <i data-lucide="plus"></i>
+                <span>+ New Export Invoice</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Bill No</th>
+                  <th>Date</th>
+                  <th>Buyer Firm</th>
+                  <th>Lorry No</th>
+                  <th>Bags</th>
+                  <th>Quantity (kg)</th>
+                  <th>Rate/kg</th>
+                  <th>Invoice Total</th>
+                  <th>DD Rec. Date</th>
+                  <th>DD Amount</th>
+                  <th>Balance Due</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 3. FARMERS & INCOMING COCONUTS -->
+      <!-- ============================================================ -->
+      <section id="view-farmers" class="page-view">
+        <!-- Top Toolbar & Switcher -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="trees"></i>
+              <span>Farmer Coconut Incoming & Procurement (கிரையச் செலவு & குத்தகை - பக்கம் 14)</span>
+            </div>
+            <div class="panel-actions">
+              <input type="text" class="search-input" id="searchProcurements" placeholder="Search farmer, village, batch...">
+              <button class="btn btn-secondary" onclick="exportCsv('procurements')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-secondary" onclick="openFarmerDirectoryModal()">
+                <i data-lucide="users"></i>
+                <span>Farmer Profiles</span>
+              </button>
+              <button class="btn btn-primary" onclick="openProcurementModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Incoming Coconut Batch</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Batch No</th>
+                  <th>Date</th>
+                  <th>Farmer / Grove</th>
+                  <th>Village</th>
+                  <th>Nuts Plucked</th>
+                  <th>Rate/Nut</th>
+                  <th>Gross Value</th>
+                  <th>Plucking Coolie</th>
+                  <th>Advance Paid</th>
+                  <th>Net Payable</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="procurementsTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 4. DE-HUSKING LABOR (INDIVIDUALS & GROUPS) -->
+      <!-- ============================================================ -->
+      <section id="view-dehusking" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="users"></i>
+              <span>Coconut De-husking Labor & Piece-Rate Wages (ஊழியர் உரிக்கும் கூலி - பக்கம் 16)</span>
+            </div>
+            <div class="panel-actions">
+              <input type="text" class="search-input" id="searchDehusking" placeholder="Search worker, date...">
+              <button class="btn btn-secondary" onclick="exportCsv('dehusking')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openDehuskingModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Daily De-husking Entry</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Worker / Group</th>
+                  <th>Type</th>
+                  <th>4P Count (900/1k)</th>
+                  <th>MO Count (700/1k)</th>
+                  <th>PL Count (1k/1k)</th>
+                  <th>Gross Wage</th>
+                  <th>Utility Advance (படி)</th>
+                  <th>Net Balance</th>
+                  <th>Settlement Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dehuskingTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 5. GROUP GRADING & GUNNY BAGS -->
+      <!-- ============================================================ -->
+      <section id="view-grading" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="package-check"></i>
+              <span>Group Grading by Gunny Bag Variant (தரம் பிரித்தல்)</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary" onclick="openGradingModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Add Group Grading Batch</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Vehicle No</th>
+                  <th>Grading Team</th>
+                  <th>Gunny Bag Variant</th>
+                  <th>Bag Count</th>
+                  <th>Pcs / Bag</th>
+                  <th>Total Nuts</th>
+                  <th>Rate/Bag</th>
+                  <th>Total Wage</th>
+                  <th>Utility Advance</th>
+                  <th>Bulk Paid</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="gradingTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 6. CARRIERS & DRIVERS (FIXED WAGES) -->
+      <!-- ============================================================ -->
+      <section id="view-carriers" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="user-check"></i>
+              <span>Carriers, Coconut Handlers & Drivers (தினசரி நிலையான கூலி - பக்கம் 9 & 10)</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary" onclick="openCarrierModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Daily Attendance & Wage Entry</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Worker Name</th>
+                  <th>Role</th>
+                  <th>Attendance</th>
+                  <th>Fixed Daily Rate</th>
+                  <th>Utility Advance (படி)</th>
+                  <th>Net Payable</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="carriersTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 7. LORRY DISPATCH & FREIGHT -->
+      <!-- ============================================================ -->
+      <section id="view-dispatch" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="truck"></i>
+              <span>Transport & Lorry Dispatch (லோடிங் வண்டித்தாள் - பக்கம் 2)</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-secondary" onclick="exportCsv('dispatch')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openDispatchModal()">
+                <i data-lucide="plus"></i>
+                <span>+ New Lorry Consignment</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Lorry No</th>
+                  <th>Transport Broker</th>
+                  <th>Route</th>
+                  <th>Total Bags</th>
+                  <th>Cargo Weight (kg)</th>
+                  <th>Freight Amount</th>
+                  <th>Advance Paid</th>
+                  <th>Balance Freight</th>
+                  <th>Driver Contact</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="dispatchTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 8. COCONUT HUSK (MATTAI) PURCHASES -->
+      <!-- ============================================================ -->
+      <section id="view-husk" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="layers"></i>
+              <span>Coconut Husk (Mattai) Purchases & Settlement (மட்டை கொள்முதல் - பக்கம் 6 & 7)</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-secondary" onclick="exportCsv('husk')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openHuskModal()">
+                <i data-lucide="plus"></i>
+                <span>+ New Husk Delivery / Trip</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Supplier / Estate</th>
+                  <th>Vehicle</th>
+                  <th>Category</th>
+                  <th>Trips</th>
+                  <th>Trip Rate</th>
+                  <th>Nut Count & Rate</th>
+                  <th>Total Amount</th>
+                  <th>Bank / Paid</th>
+                  <th>Balance Due</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="huskTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 9. MANAGERS, FLEET & PETROL -->
+      <!-- ============================================================ -->
+      <section id="view-managers" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="fuel"></i>
+              <span>Manager Vehicle Petrol / Fuel Vouchers (பக்கம் 9 & 10)</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary" onclick="openManagerExpenseModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Fuel / Travel Expense Voucher</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Voucher No</th>
+                  <th>Manager Name</th>
+                  <th>Vehicle No</th>
+                  <th>Type</th>
+                  <th>Meter Reading</th>
+                  <th>Amount</th>
+                  <th>Payment Mode</th>
+                  <th>Debit/Credit</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="managerExpTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Manager Salaries -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="briefcase"></i>
+              <span>Manager Monthly Salaries</span>
+            </div>
+            <div class="panel-actions">
+              <button class="btn btn-primary" onclick="openManagerSalaryModal()">
+                <i data-lucide="plus"></i>
+                <span>+ Log Manager Salary</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Month</th>
+                  <th>Manager Name</th>
+                  <th>Monthly Salary</th>
+                  <th>Advances Taken</th>
+                  <th>Deductions</th>
+                  <th>Net Salary Paid</th>
+                  <th>Payment Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="managerSalTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 10. CASH & BANK BOOK -->
+      <!-- ============================================================ -->
+      <section id="view-cashbook" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="book-open"></i>
+              <span>Cash & Bank Book Journal (வரவு - செலவு தினசரி நோட்டு - பக்கம் 9 & 10)</span>
+            </div>
+            <div class="panel-actions">
+              <select id="filterCashCategory" class="form-control" style="width: auto;" onchange="filterCashBook()">
+                <option value="">All Categories</option>
+                <option value="Petrol & Fuel">Petrol & Fuel</option>
+                <option value="Electricity Bill">Electricity Bill</option>
+                <option value="Auditing Fees">Auditing Fees</option>
+                <option value="Vehicle Rent">Vehicle Rent</option>
+                <option value="Harvesting Coolie">Harvesting Coolie</option>
+                <option value="Packaging Materials">Packaging Materials</option>
+                <option value="Customer Receipt">Customer Receipt</option>
+                <option value="Carrier Wages">Carrier Wages</option>
+              </select>
+              <button class="btn btn-secondary" onclick="exportCsv('cash-book')">
+                <i data-lucide="download"></i>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary" onclick="openCashBookModal()">
+                <i data-lucide="plus"></i>
+                <span>+ New Receipt / Payment</span>
+              </button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Voucher</th>
+                  <th>Category</th>
+                  <th>Particulars / Description</th>
+                  <th>Income / வரவு (Credit)</th>
+                  <th>Expense / செலவு (Debit)</th>
+                  <th>Mode</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="cashBookTableBody">
+                <!-- Dynamic Content -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- 11. NOTEBOOK SCANS ARCHIVE -->
+      <!-- ============================================================ -->
+      <section id="view-notebook" class="page-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">
+              <i data-lucide="bookmark"></i>
+              <span>Original Scanned Notebook Archive (16 Pages Analysis & Verified Audit)</span>
+            </div>
+          </div>
+          <div style="padding: 20px;">
+            <p style="margin-bottom: 20px; font-size: 13.5px; color: var(--slate-600);">
+              The digital architecture of this management system directly originates from these physical notebook pages. Each labelled divider page establishes the operational schema for its following records.
+            </p>
+            <div class="scan-grid" id="notebookScanGrid">
+              <!-- Dynamically populated from /api/notebook-archive -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- MODALS -->
+  <!-- ============================================================ -->
+
+  <!-- Modal: New Export Invoice -->
+  <div class="modal-overlay" id="modalInvoice">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalInvoiceTitle">Create Export Invoice (Tally Compatible)</h3>
+        <button class="modal-close" onclick="closeModal('modalInvoice')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formInvoice" onsubmit="handleInvoiceSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Invoice Number *</label>
+              <input type="text" id="inv_no" class="form-control" required placeholder="e.g. BILL-220">
+            </div>
+            <div class="form-group">
+              <label>Invoice Date *</label>
+              <input type="date" id="inv_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Buyer Firm Name *</label>
+              <input type="text" id="inv_buyer" class="form-control" required placeholder="e.g. M/s Shree Renuka Traders">
+            </div>
+            <div class="form-group">
+              <label>Buyer GSTIN</label>
+              <input type="text" id="inv_gstin" class="form-control" placeholder="e.g. 29BDDPG0800P1ZK">
+            </div>
+            <div class="form-group col-span-2">
+              <label>Buyer Market / Delivery Address</label>
+              <input type="text" id="inv_address" class="form-control" placeholder="e.g. CTS No. 841/2A, Raviwar Peth, Belagavi, Karnataka">
+            </div>
+            <div class="form-group">
+              <label>Lorry / Vehicle Registration No</label>
+              <input type="text" id="inv_lorry" class="form-control" placeholder="e.g. TN 28 BB 8389">
+            </div>
+            <div class="form-group">
+              <label>HSN Code</label>
+              <input type="text" id="inv_hsn" class="form-control" value="08011210">
+            </div>
+            <div class="form-group">
+              <label>Bag Count</label>
+              <input type="number" id="inv_bags" class="form-control" value="100">
+            </div>
+            <div class="form-group">
+              <label>Total Net Weight (Kgs) *</label>
+              <input type="number" step="any" id="inv_kg" class="form-control" required placeholder="e.g. 6000" oninput="calcInvoice()">
+            </div>
+            <div class="form-group">
+              <label>Rate Per Kg (₹) *</label>
+              <input type="number" step="any" id="inv_rate" class="form-control" required placeholder="e.g. 58.50" oninput="calcInvoice()">
+            </div>
+            <div class="form-group">
+              <label>Discount Amount (₹)</label>
+              <input type="number" step="any" id="inv_discount" class="form-control" value="0" oninput="calcInvoice()">
+            </div>
+            <div class="form-group">
+              <label>Interstate Consignment?</label>
+              <select id="inv_interstate" class="form-control" onchange="calcInvoice()">
+                <option value="1">Yes (IGST 5% - Karnataka/Other)</option>
+                <option value="0">No (CGST 2.5% + SGST 2.5% - Tamil Nadu)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Demand Draft (DD) / Payment Received (₹)</label>
+              <input type="number" step="any" id="inv_dd_amount" class="form-control" value="0" oninput="calcInvoice()">
+            </div>
+            <div class="form-group">
+              <label>DD Date</label>
+              <input type="date" id="inv_dd_date" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Bank Name</label>
+              <input type="text" id="inv_bank" class="form-control" value="Canara Bank">
+            </div>
+
+            <!-- Calculation Box Preview -->
+            <div class="form-group col-span-2">
+              <div class="calc-box">
+                <div class="calc-row">
+                  <span>Taxable Value:</span>
+                  <strong id="previewTaxable">₹ 0.00</strong>
+                </div>
+                <div class="calc-row">
+                  <span>Taxes (GST 5%):</span>
+                  <strong id="previewGst">₹ 0.00</strong>
+                </div>
+                <div class="calc-row total">
+                  <span>Total Invoice Amount:</span>
+                  <strong id="previewTotal">₹ 0.00</strong>
+                </div>
+                <div class="calc-row">
+                  <span>Balance Due:</span>
+                  <strong id="previewBalance">₹ 0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalInvoice')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Invoice & Create Tally XML</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Farmer Procurement / Incoming Coconuts -->
+  <div class="modal-overlay" id="modalProcurement">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Incoming Coconut Batch from Farmer / Grove</h3>
+        <button class="modal-close" onclick="closeModal('modalProcurement')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formProcurement" onsubmit="handleProcurementSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Farmer / Grove Name *</label>
+              <input type="text" id="proc_farmer" class="form-control" required placeholder="e.g. கணேசன் செட்டு / உரியூர்">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="proc_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Batch Number</label>
+              <input type="text" id="proc_batch" class="form-control" placeholder="BATCH-2026-01">
+            </div>
+            <div class="form-group">
+              <label>Coconuts Plucked Count (காய் எண்ணிக்கை) *</label>
+              <input type="number" id="proc_count" class="form-control" required placeholder="e.g. 8500" oninput="calcProcurement()">
+            </div>
+            <div class="form-group">
+              <label>Price / Rate per Coconut (₹) *</label>
+              <input type="number" step="any" id="proc_rate" class="form-control" required placeholder="e.g. 18.50" oninput="calcProcurement()">
+            </div>
+            <div class="form-group">
+              <label>Plucking / Harvesting Coolie (செலவு ₹)</label>
+              <input type="number" step="any" id="proc_coolie" class="form-control" value="0" oninput="calcProcurement()">
+            </div>
+            <div class="form-group">
+              <label>Transport / Vehicle Deduction (₹)</label>
+              <input type="number" step="any" id="proc_transport" class="form-control" value="0" oninput="calcProcurement()">
+            </div>
+            <div class="form-group">
+              <label>Advance Given (பற்று ₹)</label>
+              <input type="number" step="any" id="proc_advance" class="form-control" value="0" oninput="calcProcurement()">
+            </div>
+            <div class="form-group">
+              <label>Payment Mode</label>
+              <select id="proc_mode" class="form-control">
+                <option value="Bank Transfer">Bank Transfer (A/c)</option>
+                <option value="Cash">Cash (ரொக்கம்)</option>
+                <option value="UPI">UPI</option>
+              </select>
+            </div>
+            <div class="form-group col-span-2">
+              <div class="calc-box">
+                <div class="calc-row">
+                  <span>Gross Crop Value:</span>
+                  <strong id="previewProcGross">₹ 0.00</strong>
+                </div>
+                <div class="calc-row total">
+                  <span>Net Payable to Farmer:</span>
+                  <strong id="previewProcNet">₹ 0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalProcurement')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Procurement</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: De-husking Record -->
+  <div class="modal-overlay" id="modalDehusking">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>De-husking Labor & Piece Rates</h3>
+        <button class="modal-close" onclick="closeModal('modalDehusking')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formDehusking" onsubmit="handleDehuskingSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Worker or Group Name *</label>
+              <input type="text" id="dh_worker" class="form-control" required placeholder="e.g. முத்து (Muthu) or குழு A">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="dh_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <select id="dh_type" class="form-control">
+                <option value="individual">Individual Worker (தனிநபர்)</option>
+                <option value="group">Worker Group (செட்டு)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>4P / Kottu Count (Rate: ₹900 / 1000 nuts)</label>
+              <input type="number" id="dh_c4p" class="form-control" value="0" oninput="calcDehusking()">
+            </div>
+            <div class="form-group">
+              <label>MO / Mottai Count (Rate: ₹700 / 1000 nuts)</label>
+              <input type="number" id="dh_cmo" class="form-control" value="0" oninput="calcDehusking()">
+            </div>
+            <div class="form-group">
+              <label>PL / Peeled Count (Rate: ₹1000 / 1000 nuts)</label>
+              <input type="number" id="dh_cpl" class="form-control" value="0" oninput="calcDehusking()">
+            </div>
+            <div class="form-group col-span-2">
+              <label>Daily Utility Advance (தினசரி படி / செலவு முன்பணம் ₹)</label>
+              <input type="number" step="any" id="dh_utility" class="form-control" value="0" oninput="calcDehusking()">
+            </div>
+            <div class="form-group col-span-2">
+              <div class="calc-box">
+                <div class="calc-row">
+                  <span>Gross Piece-Rate Wage Earned:</span>
+                  <strong id="previewDhGross">₹ 0.00</strong>
+                </div>
+                <div class="calc-row total">
+                  <span>Net Balance Payable (Upon Leaving for Home):</span>
+                  <strong id="previewDhNet">₹ 0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalDehusking')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save De-husking Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Cash Book Transaction -->
+  <div class="modal-overlay" id="modalCashBook">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>New Cash Book Transaction (வரவு - செலவு)</h3>
+        <button class="modal-close" onclick="closeModal('modalCashBook')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formCashBook" onsubmit="handleCashBookSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="cb_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Transaction Type *</label>
+              <select id="cb_type" class="form-control" required>
+                <option value="debit">செலவு / பற்று (Debit / Expense)</option>
+                <option value="credit">வரவு (Credit / Receipt)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="cb_category" class="form-control" required>
+                <option value="Petrol & Fuel">Petrol & Fuel (பெட்ரோல் / டீசல்)</option>
+                <option value="Vehicle Rent">Vehicle Rent (லாரி / டிராக்டர் வாடகை)</option>
+                <option value="Electricity Bill">Electricity Bill (மின்சார கட்டணம்)</option>
+                <option value="Auditing Fees">Auditing & Legal Fees (ஆடிட்டர் கட்டணம்)</option>
+                <option value="Harvesting Coolie">Harvesting Coolie (அறுவடை கூலி)</option>
+                <option value="Dehusking Wages">Dehusking Wages (உரிக்கும் கூலி)</option>
+                <option value="Carrier Wages">Carrier Wages (தூக்கும் ஆள் கூலி)</option>
+                <option value="Loading Coolie">Loading Coolie (லோடுமேன் கூலி)</option>
+                <option value="Packaging Materials">Packaging (சாக்கு, கயிறு, பாத்திரம்)</option>
+                <option value="Office & Utilities">Office & Repairs (அலுவலகம் / பராமரிப்பு)</option>
+                <option value="Customer Receipt">Customer Receipt (விற்பனை வரவு)</option>
+                <option value="Bank Transfer">Bank Transfer (வங்கி வரவு/பற்று)</option>
+                <option value="Other">Other Miscellaneous</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Amount (₹) *</label>
+              <input type="number" step="any" id="cb_amount" class="form-control" required placeholder="e.g. 500">
+            </div>
+            <div class="form-group col-span-2">
+              <label>Particulars / Description *</label>
+              <input type="text" id="cb_particulars" class="form-control" required placeholder="e.g. Pulsar petrol expense for field manager">
+            </div>
+            <div class="form-group">
+              <label>Payment Mode</label>
+              <select id="cb_mode" class="form-control">
+                <option value="Cash">Cash (ரொக்கம்)</option>
+                <option value="Canara Bank">Canara Bank</option>
+                <option value="SBI Online">SBI Online</option>
+                <option value="UPI">UPI</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Voucher / Bill Number</label>
+              <input type="text" id="cb_voucher" class="form-control" placeholder="e.g. VCH-101">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalCashBook')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Manager Fuel Expense -->
+  <div class="modal-overlay" id="modalManagerExp">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Manager Vehicle Fuel / Travel Voucher</h3>
+        <button class="modal-close" onclick="closeModal('modalManagerExp')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formManagerExp" onsubmit="handleManagerExpSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="mgr_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Manager Name *</label>
+              <input type="text" id="mgr_name" class="form-control" required placeholder="e.g. சுரேஷ் மேலாளர்">
+            </div>
+            <div class="form-group">
+              <label>Vehicle Registration No</label>
+              <input type="text" id="mgr_vehicle" class="form-control" placeholder="e.g. TN 88 AK 9911">
+            </div>
+            <div class="form-group">
+              <label>Fuel / Expense Type</label>
+              <select id="mgr_type" class="form-control">
+                <option value="petrol">Petrol (பெட்ரோல்)</option>
+                <option value="diesel">Diesel (டீசல்)</option>
+                <option value="travel">Travel Allowance (பயணப்படி)</option>
+                <option value="maintenance">Vehicle Maintenance (வாகன பராமரிப்பு)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Meter Reading (Km)</label>
+              <input type="text" id="mgr_meter" class="form-control" placeholder="e.g. 45,210 km">
+            </div>
+            <div class="form-group">
+              <label>Amount (₹) *</label>
+              <input type="number" step="any" id="mgr_amount" class="form-control" required placeholder="e.g. 500">
+            </div>
+            <div class="form-group">
+              <label>Payment Mode</label>
+              <select id="mgr_mode" class="form-control">
+                <option value="Cash">Cash</option>
+                <option value="UPI">UPI</option>
+                <option value="Card">Card</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalManagerExp')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Fuel Voucher (Auto Debit)</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Husk Purchase -->
+  <div class="modal-overlay" id="modalHusk">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Coconut Husk (Mattai) Purchase Trip Entry</h3>
+        <button class="modal-close" onclick="closeModal('modalHusk')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formHusk" onsubmit="handleHuskSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Supplier / Estate *</label>
+              <input type="text" id="husk_supplier" class="form-control" required placeholder="e.g. திரு. பாலமுருகன்">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="husk_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Vehicle</label>
+              <input type="text" id="husk_vehicle" class="form-control" value="Eicher Lorry">
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="husk_cat" class="form-control">
+                <option value="KN மட்டை">KN மட்டை (Kottu Husk)</option>
+                <option value="MO மட்டை">MO மட்டை (Mottai Husk)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trips (நடைகள்) *</label>
+              <input type="number" step="any" id="husk_trips" class="form-control" value="1" oninput="calcHusk()">
+            </div>
+            <div class="form-group">
+              <label>Rate Per Trip (₹) *</label>
+              <input type="number" step="any" id="husk_triprate" class="form-control" value="13500" oninput="calcHusk()">
+            </div>
+            <div class="form-group">
+              <label>Extra Nut Count (If billed per nut)</label>
+              <input type="number" id="husk_nutcount" class="form-control" value="0" oninput="calcHusk()">
+            </div>
+            <div class="form-group">
+              <label>Rate Per Nut (₹)</label>
+              <input type="number" step="any" id="husk_nutrate" class="form-control" value="1.25" oninput="calcHusk()">
+            </div>
+            <div class="form-group">
+              <label>Amount Paid (₹)</label>
+              <input type="number" step="any" id="husk_paid" class="form-control" value="0" oninput="calcHusk()">
+            </div>
+            <div class="form-group">
+              <label>Payment Bank / Mode</label>
+              <input type="text" id="husk_bank" class="form-control" value="Canara Bank A/c">
+            </div>
+            <div class="form-group col-span-2">
+              <div class="calc-box">
+                <div class="calc-row">
+                  <span>Total Husk Value:</span>
+                  <strong id="previewHuskTotal">₹ 0.00</strong>
+                </div>
+                <div class="calc-row total">
+                  <span>Balance Due:</span>
+                  <strong id="previewHuskBal">₹ 0.00</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalHusk')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Husk Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Carrier & Driver Wage Entry -->
+  <div class="modal-overlay" id="modalCarrier">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Carrier / Driver Attendance & Wage Entry</h3>
+        <button class="modal-close" onclick="closeModal('modalCarrier')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formCarrier" onsubmit="handleCarrierSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Worker Name *</label>
+              <input type="text" id="cr_name" class="form-control" required placeholder="e.g. சரவணன் (Saravanan)">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="cr_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Role</label>
+              <select id="cr_role" class="form-control">
+                <option value="carrier">Coconut Handler / Carrier (தூக்கும் ஆள்)</option>
+                <option value="driver">Lorry / Tractor Driver (ஓட்டுநர்)</option>
+                <option value="field_picker">Field Grove Picker (தோட்டத்து ஆள்)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Attendance Status</label>
+              <select id="cr_att" class="form-control">
+                <option value="present">Present (முழு நாள்)</option>
+                <option value="half_day">Half Day (அரை நாள்)</option>
+                <option value="absent">Absent (விடுமுறை)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Fixed Daily Wage (₹) *</label>
+              <input type="number" step="any" id="cr_rate" class="form-control" required value="450">
+            </div>
+            <div class="form-group">
+              <label>Daily Advance / Utility Given (படி ₹)</label>
+              <input type="number" step="any" id="cr_adv" class="form-control" value="0">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalCarrier')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Wage Entry</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Group Grading Entry -->
+  <div class="modal-overlay" id="modalGrading">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Group Grading by Gunny Bag Variant</h3>
+        <button class="modal-close" onclick="closeModal('modalGrading')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formGrading" onsubmit="handleGradingSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Grading Group / Team *</label>
+              <input type="text" id="gr_team" class="form-control" required placeholder="e.g. Vadakara Grading Team">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="gr_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Vehicle / Consignment Lorry</label>
+              <input type="text" id="gr_vehicle" class="form-control" placeholder="e.g. TN 38 AJ 4386">
+            </div>
+            <div class="form-group">
+              <label>Gunny Bag Variant *</label>
+              <input type="text" id="gr_variant" class="form-control" required placeholder="e.g. Grade A - 41 Count Bag">
+            </div>
+            <div class="form-group">
+              <label>Total Bags Packed *</label>
+              <input type="number" id="gr_bags" class="form-control" required value="100">
+            </div>
+            <div class="form-group">
+              <label>Pieces / Count Per Bag</label>
+              <input type="number" id="gr_pcs" class="form-control" value="41">
+            </div>
+            <div class="form-group">
+              <label>Rate per Bag (₹) *</label>
+              <input type="number" step="any" id="gr_rate" class="form-control" required value="8.00">
+            </div>
+            <div class="form-group">
+              <label>Daily Utility Advance (படி ₹)</label>
+              <input type="number" step="any" id="gr_adv" class="form-control" value="0">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalGrading')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Grading Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Lorry Consignment Dispatch -->
+  <div class="modal-overlay" id="modalDispatch">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>New Lorry Consignment Dispatch (Loading Sheet)</h3>
+        <button class="modal-close" onclick="closeModal('modalDispatch')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formDispatch" onsubmit="handleDispatchSubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Lorry Registration No *</label>
+              <input type="text" id="dsp_lorry" class="form-control" required placeholder="e.g. TN 38 AJ 4386">
+            </div>
+            <div class="form-group">
+              <label>Date *</label>
+              <input type="date" id="dsp_date" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Transport / Broker Agency</label>
+              <input type="text" id="dsp_agency" class="form-control" placeholder="e.g. M/s SD Coimbatore Transport">
+            </div>
+            <div class="form-group">
+              <label>Origin Route</label>
+              <input type="text" id="dsp_from" class="form-control" value="Thennalapatti">
+            </div>
+            <div class="form-group">
+              <label>Destination Route *</label>
+              <input type="text" id="dsp_to" class="form-control" required placeholder="e.g. Vadakara / Belagavi">
+            </div>
+            <div class="form-group">
+              <label>Total Bags</label>
+              <input type="number" id="dsp_bags" class="form-control" placeholder="e.g. 970">
+            </div>
+            <div class="form-group">
+              <label>Total Cargo Weight (kg)</label>
+              <input type="number" step="any" id="dsp_weight" class="form-control" placeholder="e.g. 17130">
+            </div>
+            <div class="form-group">
+              <label>Freight Amount (₹) *</label>
+              <input type="number" step="any" id="dsp_freight" class="form-control" required placeholder="e.g. 49700">
+            </div>
+            <div class="form-group">
+              <label>Advance Freight Given (₹)</label>
+              <input type="number" step="any" id="dsp_adv" class="form-control" value="0">
+            </div>
+            <div class="form-group">
+              <label>Driver Contact Number</label>
+              <input type="text" id="dsp_phone" class="form-control" placeholder="e.g. 9751399029">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalDispatch')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save Consignment Slip</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Manager Salary -->
+  <div class="modal-overlay" id="modalManagerSalary">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3>Record Manager Monthly Salary</h3>
+        <button class="modal-close" onclick="closeModal('modalManagerSalary')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formManagerSalary" onsubmit="handleManagerSalarySubmit(event)">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Manager Name *</label>
+              <input type="text" id="ms_name" class="form-control" required placeholder="e.g. சுரேஷ் மேலாளர்">
+            </div>
+            <div class="form-group">
+              <label>Month & Year *</label>
+              <input type="month" id="ms_month" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label>Monthly Base Salary (₹) *</label>
+              <input type="number" step="any" id="ms_salary" class="form-control" required value="25000">
+            </div>
+            <div class="form-group">
+              <label>Advances Taken (பற்று ₹)</label>
+              <input type="number" step="any" id="ms_adv" class="form-control" value="0">
+            </div>
+            <div class="form-group">
+              <label>Other Deductions (₹)</label>
+              <input type="number" step="any" id="ms_ded" class="form-control" value="0">
+            </div>
+            <div class="form-group">
+              <label>Payment Mode</label>
+              <select id="ms_mode" class="form-control">
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cash">Cash</option>
+                <option value="Cheque">Cheque</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" onclick="closeModal('modalManagerSalary')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Disburse Salary</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Farmer Profiles Directory -->
+  <div class="modal-overlay" id="modalFarmerDirectory">
+    <div class="modal-box" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3>Farmer Directory & Bank Details</h3>
+        <button class="modal-close" onclick="closeModal('modalFarmerDirectory')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="formNewFarmer" onsubmit="handleNewFarmerSubmit(event)" style="margin-bottom: 20px; border-bottom: 1px solid var(--slate-200); padding-bottom: 16px;">
+          <h4 style="font-size:14px; margin-bottom: 10px;">+ Add New Farmer / Grove</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Farmer Name *</label>
+              <input type="text" id="fm_name" class="form-control" required placeholder="e.g. குமார் தோட்டம்">
+            </div>
+            <div class="form-group">
+              <label>Mobile Number</label>
+              <input type="text" id="fm_phone" class="form-control" placeholder="9842100000">
+            </div>
+            <div class="form-group">
+              <label>Village / Place</label>
+              <input type="text" id="fm_village" class="form-control" placeholder="அய்யம்பாளையம்">
+            </div>
+            <div class="form-group">
+              <label>Bank Name</label>
+              <input type="text" id="fm_bank" class="form-control" placeholder="Canara Bank / SBI">
+            </div>
+            <div class="form-group">
+              <label>Account Number</label>
+              <input type="text" id="fm_acc" class="form-control" placeholder="1234567890">
+            </div>
+            <div class="form-group">
+              <label>IFSC Code</label>
+              <input type="text" id="fm_ifsc" class="form-control" placeholder="CNRB0001234">
+            </div>
+          </div>
+          <div style="margin-top: 12px; text-align: right;">
+            <button type="submit" class="btn btn-primary btn-sm">+ Save Farmer Profile</button>
+          </div>
+        </form>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Farmer Name</th>
+                <th>Phone</th>
+                <th>Village</th>
+                <th>Bank</th>
+                <th>Account No</th>
+                <th>IFSC</th>
+              </tr>
+            </thead>
+            <tbody id="farmerDirectoryTbody">
+              <tr><td colspan="6" style="text-align:center;">Loading directory...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Printable Invoice Document Template -->
+  <div id="printArea">
+    <div style="border: 2px solid #334155; padding: 24px; max-width: 800px; margin: 0 auto; background: white;">
+      <div style="text-align: center; border-bottom: 2px solid #064e3b; padding-bottom: 12px; margin-bottom: 16px;">
+        <h1 style="color: #064e3b; font-size: 22px; text-transform: uppercase;">TENKASI & KANGEYAM COCONUT EXPORTERS</h1>
+        <p style="font-size: 12px; color: #475569;">Wholesale Coconut Merchants & Exporters • Main Yard: Kangeyampalayam, Tamil Nadu</p>
+        <p style="font-size: 12px; font-weight: bold;">GSTIN: 33AAAAA0000A1Z5 • State Code: 33 (Tamil Nadu)</p>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px;">
+        <div>
+          <strong>Billed To (Buyer):</strong><br>
+          <span id="printBuyerName">M/s Shree Renuka Traders</span><br>
+          <span id="printBuyerAddress">Belagavi, Karnataka</span><br>
+          GSTIN: <span id="printBuyerGstin">29BDDPG0800P1ZK</span>
+        </div>
+        <div style="text-align: right;">
+          <strong>TAX INVOICE</strong><br>
+          Invoice No: <span id="printInvNo">BILL-07</span><br>
+          Date: <span id="printInvDate">2026-04-05</span><br>
+          Vehicle / Lorry: <span id="printLorry">TN 28 AM 1498</span>
+        </div>
+      </div>
+      <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;" border="1">
+        <thead>
+          <tr style="background: #f1f5f9;">
+            <th style="padding: 8px;">Description</th>
+            <th style="padding: 8px;">HSN</th>
+            <th style="padding: 8px;">Bags</th>
+            <th style="padding: 8px;">Net Weight (Kg)</th>
+            <th style="padding: 8px;">Rate (₹/Kg)</th>
+            <th style="padding: 8px;">Amount (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 8px;" id="printDesc">Fresh Semi-Husked Coconuts</td>
+            <td style="padding: 8px;" id="printHsn">08011210</td>
+            <td style="padding: 8px;" id="printBags">100</td>
+            <td style="padding: 8px;" id="printWeight">6000</td>
+            <td style="padding: 8px;" id="printRate">56.50</td>
+            <td style="padding: 8px;" id="printTaxable">3,39,000</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="display: flex; justify-content: flex-end; margin-bottom: 20px; font-size: 13px;">
+        <div style="width: 250px;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>Taxable Value:</span>
+            <strong id="printSumTaxable">₹ 0.00</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>Taxes (GST 5%):</span>
+            <strong id="printSumGst">₹ 0.00</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-top: 1px solid #334155; padding-top: 4px; font-size: 15px;">
+            <span>Total Amount:</span>
+            <strong id="printSumTotal">₹ 0.00</strong>
+          </div>
+        </div>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-top: 50px; font-size: 12px;">
+        <div>Customer Signature</div>
+        <div>For Tenkasi & Kangeyam Coconut Exporters<br><br><br>Authorized Signatory</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
